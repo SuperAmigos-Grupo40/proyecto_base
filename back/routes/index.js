@@ -8,7 +8,7 @@ const app = Express();
 
 const volunteerRoutes = require('./volunteer-routes');
 const coordinatorRoutes = require('./coordinator-routes');
-// const tareaRoutes = require('./tareas-routes');
+const tareaRoutes = require('./tareas-routes');
 const categoryRoutes = require('./category-routes');
 
 app.use('/', rootPath.handler);
@@ -17,8 +17,11 @@ app.use(errors.handler);
 
 app.use('/volunteer', volunteerRoutes);
 app.use('/coordinator', coordinatorRoutes);
-// app.use('/tarea', tareaRoutes);
+app.use('/tarea', tareaRoutes);
 app.use('/category', categoryRoutes);
 
 // eslint-disable-next-line max-len
-module.exports = { volunteer: volunteerRoutes, coordinator: coordinatorRoutes, category: categoryRoutes };
+module.exports = {
+  // eslint-disable-next-line max-len
+  volunteer: volunteerRoutes, coordinator: coordinatorRoutes, category: categoryRoutes, tarea: tareaRoutes,
+};

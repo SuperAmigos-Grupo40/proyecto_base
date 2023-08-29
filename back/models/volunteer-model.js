@@ -1,9 +1,10 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class volunteer extends Model {}
+  class Volunteer extends Model {
+  }
 
-  volunteer.init(
+  Volunteer.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -43,11 +44,12 @@ module.exports = (sequelize, DataTypes) => {
     }, {
       sequelize,
       modelName: 'volunteer',
+      tableName: 'volunteers',
       timestamps: false,
       underscored: false,
       createdAt: false,
       updatedAt: false,
     },
   );
-  return volunteer;
+  return Volunteer;
 };

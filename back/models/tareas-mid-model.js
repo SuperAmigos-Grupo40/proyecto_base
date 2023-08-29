@@ -5,13 +5,13 @@ module.exports = (sequelize, DataTypes) => {
 
   tareasMid.init(
     {
-      id: {
+      idTarea: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      id_volunteer: {
+      idVolunteer: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'tareas_mid',
+      modelName: 'tareas-mid',
+      tableName: 'tareasMid',
       timestamps: false,
     },
   );
