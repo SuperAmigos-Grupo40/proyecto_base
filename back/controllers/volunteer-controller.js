@@ -78,7 +78,24 @@ async function modifyPasswordController(req, res) {
   }
 }
 
+async function asignarTareaVoluntario(req, res) {
+  try {
+    const respuesta = await volunteerServices.asignarTareaUsuario();
+    res.status(200).json({ respuesta });
+  } catch (err) {
+    res.status(500).json({ err });
+  }
+}
+
 module.exports = {
   // eslint-disable-next-line max-len
-  getAllVolunteer, getVolunteerById, createVolunteer, editVolunteer, deleteVolunteer, loginVolunteer, getDataVoluntario, modifyPasswordController,
+  getAllVolunteer,
+  getVolunteerById,
+  createVolunteer,
+  editVolunteer,
+  deleteVolunteer,
+  loginVolunteer,
+  getDataVoluntario,
+  modifyPasswordController,
+  asignarTareaVoluntario,
 };

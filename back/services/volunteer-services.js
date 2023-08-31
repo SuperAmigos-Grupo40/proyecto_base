@@ -3,11 +3,14 @@
 // eslint-disable-next-line no-unused-vars
 const { DataTypes, Sequelize } = require('sequelize');
 const volunteerModel = require('../models/volunteer-model');
+const tareaModel = require('../models/tarea-model');
+
 const jwt = require('jsonwebtoken');
 const { sequelize } = require('../models');
 const bcrypt = require('bcrypt');
 
 const Volunteer = volunteerModel(sequelize, DataTypes);
+const Tarea = tareaModel(sequelize, DataTypes);
 
 async function getAll() {
   const listVolunteer = await Volunteer.findAll();
@@ -128,6 +131,38 @@ async function login(email, password) {
   return token;
 }
 
+async function asignarTareaUsuario() {
+  try {
+    // const voluntario = await Volunteer.findByPk(6);
+    // const tarea = await Tarea.findByPk(1);
+    // const tareasMidd = await TareasMid.create({
+    //   id_tarea: 1,
+    //   id_volunteer: 6,
+    //   asistencia: false,
+    // });
+
+    // return tareasMidd;
+
+    const voluntario = await Volunteer.findOne({
+      where: {
+        id: 6,
+      },
+      include: [
+        {
+          model: Tarea,
+          // include: [{
+          //   model: Tarea,
+          // }],
+        },
+      ],
+    });
+
+    return voluntario;
+  } catch (err) {
+    return err;
+  }
+}
+
 module.exports = {
-  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword,
+  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword, asignarTareaUsuario,
 };

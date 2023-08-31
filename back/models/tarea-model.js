@@ -3,7 +3,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Tarea extends Model {
     static associate(models) {
-      Tarea.belongsToMany(models.Volunteer, { through: models.TareasMid });
+      Tarea.belongsToMany(models.Volunteer, { through: 'TareasMid' });
     }
   }
   Tarea.init(
@@ -25,10 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       id_coordinator: {
         type: DataTypes.INTEGER,
       },
-      id_volunteer: {
-        type: DataTypes.INTEGER,
-      },
-      point: {
+      points: {
         type: DataTypes.BIGINT,
         allowNull: true,
         defaultValue: 0,
