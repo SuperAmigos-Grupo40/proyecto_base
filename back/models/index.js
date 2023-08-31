@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
+const TareasMid = require('./tareas-mid-model');
+
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 // eslint-disable-next-line import/no-dynamic-require
@@ -31,6 +33,10 @@ Object.keys(db).forEach((modelName) => {
   }
 });
 
+TareasMid.associate = (models) => {
+  TareasMid.belongsTo(models.Volunteer);
+  TareasMid.belongsTo(models.Tarea);
+};
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
