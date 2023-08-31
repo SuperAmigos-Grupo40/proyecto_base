@@ -1,9 +1,13 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class volunteer extends Model {}
+  class Volunteer extends Model {
+    static associate(models) {
+      Volunteer.belongsToMany(models.Tarea, { through: models.TareasMid });
+    }
+  }
 
-  volunteer.init(
+  Volunteer.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -42,12 +46,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     }, {
       sequelize,
-      modelName: 'volunteer',
+      modelName: 'Volunteer',
       timestamps: false,
       underscored: false,
       createdAt: false,
       updatedAt: false,
     },
   );
-  return volunteer;
+  return Volunteer;
 };
