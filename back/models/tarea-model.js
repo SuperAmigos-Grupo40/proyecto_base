@@ -1,19 +1,8 @@
 const { Model } = require('sequelize');
 
-// const volunteer = require('./volunteer-model');
-// const coordinator = require('./coordinator-model');
-// const category = require('./category-model');
-
 module.exports = (sequelize, DataTypes) => {
-  class tarea extends Model {
-    static associate() {
-      // Tarea.belongsToMany(volunteer, { through: 'tareas-mid' });
-      // volunteer.belongsToMany(Tarea, { through: 'tareas-mid' });
-      // Tarea.belongsTo(coordinator, { foreignKey: 'idCoordinator' });
-      // Tarea.belongsTo(category, { foreignKey: 'idCategory' });
-    }
-  }
-  tarea.init(
+  class tareas extends Model {}
+  tareas.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -29,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      idCoordinator: {
+      id_coordinator: {
+        type: DataTypes.INTEGER,
+      },
+      id_volunteer: {
         type: DataTypes.INTEGER,
       },
       point: {
@@ -45,25 +37,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      idCategory: {
+      id_category: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
-      cantParticipantes: {
+      cant_participantes: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
 
     }, {
       sequelize,
-      modelName: 'tarea',
-      tableName: 'tareas',
+      modelName: 'tareas',
       timestamps: false,
       underscored: false,
       createdAt: false,
       updatedAt: false,
     },
   );
-
-  return tarea;
+  return tareas;
 };

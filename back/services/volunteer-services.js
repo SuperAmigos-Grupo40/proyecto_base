@@ -3,6 +3,8 @@
 // eslint-disable-next-line no-unused-vars
 const { DataTypes, Sequelize } = require('sequelize');
 const volunteerModel = require('../models/volunteer-model');
+const models = require('../models/index');
+
 const jwt = require('jsonwebtoken');
 const { sequelize } = require('../models');
 const bcrypt = require('bcrypt');
@@ -128,6 +130,43 @@ async function login(email, password) {
   return token;
 }
 
+async function asignarTareaVoluntario(idTarea = 1, idVoluntario = 4) {
+  try {
+    // Se busca el voluntario por id
+    // eslint-disable-next-line max-len
+    const voluntario = await models.volunteer.findByPk(idVoluntario); // <-- Esta es la forma de importar los modelos para que funcione
+
+    // Se valida si hay voluntario
+    if (!voluntario) throw new Error('No existe un voluntario con el id especificado');
+
+    // Se busca la tarea por id
+    const tarea = await models.tarea.findByPk(idTarea);
+
+    // Se valida si hay voluntario
+    if (!tarea) throw new Error('No existe una tarea con el id especificado');
+
+    // Al voluntario se le agrega la tarea, y se le pasa un objeto extra,
+    // para asignar ese valor a la propiedad asistio de la tabla intermedia
+    await voluntario.addTarea(tarea, { through: { asistio: false } });
+    await voluntario.save();
+
+    // Se busca al usuario por su id, y se incluyen las tareas que tiene asignadas
+    const voluntarioConTareas = await models.volunteer.findOne({
+      where: {
+        id: idVoluntario,
+      },
+      include: [
+        {
+          model: models.tarea,
+        },
+      ],
+    });
+    return voluntarioConTareas;
+  } catch (err) {
+    return err;
+  }
+}
+
 module.exports = {
-  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword,
+  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword, asignarTareaVoluntario,
 };
