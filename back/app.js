@@ -76,15 +76,6 @@ models.sequelize.authenticate()
     logger.api.error(err);
   });
 
-(async () => {
-  try {
-    await models.sequelize.sync({ force: false }); // 'force: true' eliminará y recreará las tablas
-    console.log('Base de datos sincronizada');
-  } catch (error) {
-    console.error('Error sincronizando la base de datos:', error);
-  }
-})();
-
 // app.use('/', routes);
 app.use('/volunteer', routes.volunteer);
 app.use('/coordinator', routes.coordinator);
