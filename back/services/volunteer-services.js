@@ -3,14 +3,13 @@
 // eslint-disable-next-line no-unused-vars
 const { DataTypes, Sequelize } = require('sequelize');
 const volunteerModel = require('../models/volunteer-model');
-const tareaModel = require('../models/tarea-model');
+const models = require('../models/index');
 
 const jwt = require('jsonwebtoken');
 const { sequelize } = require('../models');
 const bcrypt = require('bcrypt');
 
 const Volunteer = volunteerModel(sequelize, DataTypes);
-const Tarea = tareaModel(sequelize, DataTypes);
 
 async function getAll() {
   const listVolunteer = await Volunteer.findAll();
@@ -131,38 +130,43 @@ async function login(email, password) {
   return token;
 }
 
-async function asignarTareaUsuario() {
+async function asignarTareaVoluntario(idTarea = 1, idVoluntario = 4) {
   try {
-    // const voluntario = await Volunteer.findByPk(6);
-    // const tarea = await Tarea.findByPk(1);
-    // const tareasMidd = await TareasMid.create({
-    //   id_tarea: 1,
-    //   id_volunteer: 6,
-    //   asistencia: false,
-    // });
+    // Se busca el voluntario por id
+    // eslint-disable-next-line max-len
+    const voluntario = await models.volunteer.findByPk(idVoluntario); // <-- Esta es la forma de importar los modelos para que funcione
 
-    // return tareasMidd;
+    // Se valida si hay voluntario
+    if (!voluntario) throw new Error('No existe un voluntario con el id especificado');
 
-    const voluntario = await Volunteer.findOne({
+    // Se busca la tarea por id
+    const tarea = await models.tarea.findByPk(idTarea);
+
+    // Se valida si hay voluntario
+    if (!tarea) throw new Error('No existe una tarea con el id especificado');
+
+    // Al voluntario se le agrega la tarea, y se le pasa un objeto extra,
+    // para asignar ese valor a la propiedad asistio de la tabla intermedia
+    await voluntario.addTarea(tarea, { through: { asistio: false } });
+    await voluntario.save();
+
+    // Se busca al usuario por su id, y se incluyen las tareas que tiene asignadas
+    const voluntarioConTareas = await models.volunteer.findOne({
       where: {
-        id: 6,
+        id: idVoluntario,
       },
       include: [
         {
-          model: Tarea,
-          // include: [{
-          //   model: Tarea,
-          // }],
+          model: models.tarea,
         },
       ],
     });
-
-    return voluntario;
+    return voluntarioConTareas;
   } catch (err) {
     return err;
   }
 }
 
 module.exports = {
-  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword, asignarTareaUsuario,
+  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword, asignarTareaVoluntario,
 };
