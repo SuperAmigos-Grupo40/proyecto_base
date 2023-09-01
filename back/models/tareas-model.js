@@ -5,7 +5,7 @@ const { Model } = require('sequelize');
 // const category = require('./category-model');
 
 module.exports = (sequelize, DataTypes) => {
-  class Tarea extends Model {
+  class tarea extends Model {
     static associate() {
       // Tarea.belongsToMany(volunteer, { through: 'tareas-mid' });
       // volunteer.belongsToMany(Tarea, { through: 'tareas-mid' });
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // Tarea.belongsTo(category, { foreignKey: 'idCategory' });
     }
   }
-  Tarea.init(
+  tarea.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -65,5 +65,5 @@ module.exports = (sequelize, DataTypes) => {
     },
   );
 
-  return Tarea;
+  return tarea;
 };

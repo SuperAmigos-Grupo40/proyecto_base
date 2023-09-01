@@ -10,10 +10,18 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
+        references: {
+          model: 'tarea',
+          key: 'id',
+        },
       },
       idVolunteer: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        references: {
+          model: 'volunteer',
+          key: 'id',
+        },
       },
       asistencia: {
         type: DataTypes.BOOLEAN,
