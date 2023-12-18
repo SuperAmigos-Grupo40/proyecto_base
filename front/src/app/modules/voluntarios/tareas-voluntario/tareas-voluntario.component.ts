@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ResumenVoluntario } from 'src/app/core/interfaces/resumenVoluntario';
 import { Tarea } from 'src/app/core/interfaces/tarea';
 import { Voluntario } from 'src/app/core/interfaces/voluntario';
 import { TareaService } from 'src/app/core/services/tarea.service';
@@ -12,10 +13,10 @@ import Swal from 'sweetalert2';
 })
 export class TareasVoluntarioComponent implements OnInit {
   
-  datosVoluntario:Voluntario | null = null;
+  datosVoluntario:ResumenVoluntario | null = null;
   constructor(private voluntarioService:VoluntarioService, private tareaService:TareaService) {
     this.voluntarioService.getDatosVoluntario.subscribe({
-      next:(res)=> this.datosVoluntario = res
+      next:(res)=> {this.datosVoluntario = res; console.log("Nuevos datos")}
     });
    }
 
@@ -37,14 +38,19 @@ export class TareasVoluntarioComponent implements OnInit {
         confirmButtonText: 'Si'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.tareaService.inscribirVoluntario(tarea.id!,this.datosVoluntario?.id!).subscribe({
+          this.tareaService.inscribirVoluntario(tarea.id!,this.datosVoluntario?.voluntario.id!).subscribe({
             next:(res)=>{
               Swal.fire(
                 'Felicitaciones!',
                 `Te has inscripto a la tarea: ${tarea.name}`,
                 'success'
               );
-              this.voluntarioService.setDatosVoluntario = res;
+              const nuevosDatos:ResumenVoluntario = this.datosVoluntario!;
+
+              nuevosDatos.voluntario = res.voluntario;
+              nuevosDatos.tareas = res.tareas;
+
+              this.voluntarioService.setDatosVoluntario = nuevosDatos;
             },
             error:()=>{
               Swal.fire(
@@ -59,5 +65,50 @@ export class TareasVoluntarioComponent implements OnInit {
         })
     };
   }    
+
+  desinscribirVoluntario(tarea:Tarea):void{
+    
+    if(this.datosVoluntario){
+ 
+       Swal.fire({
+         title: 'Estas seguro/a?',
+         text: "Deseas desinscribirte a la tarea: "+tarea.name+"?",
+         icon: 'warning',
+         iconColor:'#d33',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#3085d6',
+         cancelButtonText: 'No, Cancelar',
+         confirmButtonText: 'Si'
+       }).then((result) => {
+         if (result.isConfirmed) {
+           this.tareaService.desinscribirVoluntario(tarea.id!,this.datosVoluntario?.voluntario.id!).subscribe({
+             next:(res)=>{
+               Swal.fire(
+                 'Ok!',
+                 `Te desinscribiste a la tarea: ${tarea.name}`,
+                 'success'
+               );
+
+               const nuevosDatos:ResumenVoluntario = this.datosVoluntario!;
+
+               nuevosDatos.voluntario = res.voluntario;
+               nuevosDatos.tareas = res.tareas;
+ 
+               this.voluntarioService.setDatosVoluntario = nuevosDatos;
+             },
+             error:()=>{
+               Swal.fire(
+                 'Error',
+                 'No se pudo realizar la inscripción.',
+                 'error'
+               );
+             }
+             });
+           };
+           
+         })
+     };
+   }    
 
 }

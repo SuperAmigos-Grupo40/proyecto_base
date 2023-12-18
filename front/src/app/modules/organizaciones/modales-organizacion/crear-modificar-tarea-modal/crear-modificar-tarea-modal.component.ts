@@ -12,7 +12,7 @@ import { CategoriaService } from 'src/app/core/services/categoria.service';
 import { OrganizacionService } from 'src/app/core/services/organizacion.service';
 import { TareaService } from 'src/app/core/services/tarea.service';
 import * as moment from 'moment';
-import { ThisReceiver } from '@angular/compiler';
+import { ResumenOrganizacion } from 'src/app/core/interfaces/resumenOrganizacion';
 
 @Component({
   selector: 'app-crear-tarea-modal',
@@ -45,7 +45,7 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
       this.titulo ='Modificar Tarea';
       this.modificar = true;
       this.duracion = this.dataTarea.duracion;
-      this.puntos = this.dataTarea.category?.puntosPorHora!;
+      this.puntos = this.dataTarea.points / this.dataTarea.duracion;
       this.longitud = this.dataTarea.longitud;
       this.latitud = this.dataTarea.latitud;
       this.direccionFormateada = this.dataTarea.place;
@@ -63,7 +63,7 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
   @ViewChild('inputDireccion') inputDireccion!: ElementRef;
   
   listCategorias:Categoria[] = [];
-  datosOrganizacion$:Observable<Organizacion | null>;
+  datosOrganizacion$:Observable<ResumenOrganizacion | null>;
   form:FormGroup;
   titulo:string;
   modificar:boolean;
@@ -124,9 +124,8 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
         
         this.listCategorias = res;
       },
-      error:(err)=> {
+      error:()=> {
         
-        console.log(err)
       
       }
     });
@@ -137,7 +136,7 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
     let idCoordinador = null;
     this.datosOrganizacion$.pipe(take(1)).subscribe({
       next:(res)=>{
-        idCoordinador = res?.id;
+        idCoordinador = res?.coordinador.id;
       }
     });
     
@@ -208,13 +207,17 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
     
     if(categoria != null){
       
-      if(this.form.value.categoriaId) this.puntos = categoria.puntosPorHora;
+      if(this.form.value.categoriaId) {
+          
+        this.puntos = categoria.puntosPorHora;
+      }
     }
+    
 
     if(this.form.value.duracion) this.duracion = this.form.value.duracion;
    
     this.form.patchValue({
-      puntos: this.puntos*this.duracion
+      puntos:  (this.puntos*this.duracion).toString()
     });
   }
 

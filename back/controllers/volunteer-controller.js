@@ -2,12 +2,16 @@ const volunteerServices = require('../services/volunteer-services');
 const fs = require('fs');
 const path = require('path');
 const PDFDocument = require('pdfkit');
+const models = require('../models/index');
 
 async function getDataVoluntario(req, res) {
   const { usuario } = req;
-
-  const voluntario = await volunteerServices.getById(usuario.id);
-  res.status(200).send(voluntario);
+  try {
+    const data = await volunteerServices.getDatosVoluntario(usuario.id);
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send('Error interno del servidor');
+  }
 }
 
 async function getAllVolunteer(req, res, next) {
@@ -32,15 +36,15 @@ async function getVolunteerById(req, res, next) {
 
 async function createVolunteer(req, res, next) {
   const {
-    name, lastname, dni, email, password, address, phone,
+    name, lastname, email, password, address, phone,
   } = req.body;
 
   try {
     // eslint-disable-next-line max-len
-    const user = await volunteerServices.createUser(name, lastname, dni, email, password, address, phone);
+    const user = await volunteerServices.createUser(name, lastname, email, password, address, phone);
     res.status(201).send(user);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: 'Ocurrió un error en el servidor' });
   }
 }
 
@@ -106,7 +110,7 @@ async function asingVolunteerWork(req, res, next) {
       return res.status(400).json({ error: result.error });
     }
 
-    res.status(200).send(result.voluntario);
+    res.status(200).send(result);
   } catch (error) {
     next(error);
   }
@@ -142,7 +146,22 @@ async function canjearPremioController(req, res) {
     res.status(500).json({ error: error.message });
   }
 }
+
+async function unsuscribeVolunteerWork (req, res) {
+  const { idTarea, idVolunteer } = req.body;
+
+  try {
+    const result = await volunteerServices.unsuscribe(idTarea, idVolunteer);
+
+    if (result.error) {
+      return res.status(400).json({ error: result.error });
+    }
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).json({ error: 'Ocurrió un error en el servidor' });
+  }
+}
 module.exports = {
   // eslint-disable-next-line max-len
-  getAllVolunteer, getVolunteerById, createVolunteer, editVolunteer, deleteVolunteer, loginVolunteer, getDataVoluntario, modifyPasswordController, asingVolunteerWork, canjearPremioController,
+  getAllVolunteer, getVolunteerById, createVolunteer, editVolunteer, deleteVolunteer, loginVolunteer, getDataVoluntario, modifyPasswordController, asingVolunteerWork, canjearPremioController, unsuscribeVolunteerWork,
 };
