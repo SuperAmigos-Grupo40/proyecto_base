@@ -13,14 +13,18 @@ import { DetalleTareaComponent } from '../../shared/components/detalle-tarea/det
 })
 export class DashboardOrganizacionComponent implements OnInit {
 
-  constructor(organizacionService:OrganizacionService, private modal:MatDialog) {
+  constructor(private organizacionService:OrganizacionService, private modal:MatDialog) {
     this.datosOrganizacion$ = organizacionService.getDatosOrganizacion;
+    this.datosOrganizacion$.subscribe({next:(res)=>{
+      console.log(res);
+    }})
   }
 
   datosOrganizacion$:Observable<ResumenOrganizacion|null>;
 
 
   ngOnInit(): void {
+    this.organizacionService.obtenerDatosOrganizacion().subscribe();
   }
 
   verDetalles(tarea:Tarea):void{
