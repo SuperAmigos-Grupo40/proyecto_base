@@ -183,6 +183,42 @@ async function getDataAdmin(userId) {
 
   return { cantCoordinator, cantVolunteer, admin };
 }
+
+async function sendDataDashboard() {
+  const voluntario = await volunteerServices.getAll();
+  const organizacion = await coordinatorServices.getAll();
+  //const horas = await volunteerServices.getDatosVoluntario(userId);
+  let cantVolunteer = 0;
+  let cantOrg = 0;
+  let horasDonadasTotal = 0;
+  let premiosCanjeadosTotal = 0;
+
+  if (!voluntario || voluntario.length === 0) {
+    throw new Error('No se han encontrado voluntarios');
+  }
+
+  for (let i = 0; i < voluntario.length; i++) {
+    cantVolunteer++;
+  }
+
+  for (let j = 0; j < organizacion.length; j++) {
+    cantOrg++;
+  }
+
+  for (let k = 0; k < voluntario.length; k++) {
+    const userId = voluntario[k].id;
+    console.log(`userid: ${userId}`);
+
+    if (userId !== undefined) {
+      const datosVoluntario = await volunteerServices.getDatosVoluntario(userId);
+      horasDonadasTotal += datosVoluntario.horasTrabajadas;
+      premiosCanjeadosTotal += datosVoluntario.premiosCanjeados;
+    } else {
+      console.error('El id es undefined');
+    }
+  }
+  return { cantVolunteer, cantOrg, horasDonadasTotal, premiosCanjeadosTotal };
+}
 module.exports = {
-  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword, createAdminDefault, getDataAdmin,
+  getAll, getById, createUser, editUser, deleteUser, login, modifyPassword, createAdminDefault, getDataAdmin, sendDataDashboard,
 };

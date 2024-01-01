@@ -14,7 +14,8 @@ router.post('/create-user', adminController.createAdministrator);
 router.put('/edit-user/:id', isAuthenticatedAdmin, adminController.editAdministrator);
 router.put('/modify-password/:id', isAuthenticatedAdmin, adminController.modifyPasswordController);
 router.delete('/delete-user/:id', isAuthenticatedAdmin, adminController.deleteAdministrator);
-router.get('/get-all-coordinator',isAuthenticatedAdmin,coordinatorController.getAllCoordinators);
-router.get('/volunteer',isAuthenticatedAdmin,volunteerController.getAllVolunteer);
+router.get('/get-all-coordinator', isAuthenticatedAdmin, coordinatorController.getAllCoordinators);
+router.get('/volunteer', isAuthenticatedAdmin, volunteerController.getAllVolunteer);
+router.get('/datosDashboard', adminController.getDataDashboardController);
 
 module.exports = router;
