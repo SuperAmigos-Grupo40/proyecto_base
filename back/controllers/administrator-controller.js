@@ -67,6 +67,10 @@ async function modifyPasswordController(req, res) {
   }
 }
 
+async function getDataDashboardController(req, res) {
+  const data = await adminService.sendDataDashboard();
+  res.status(200).send(data);
+}
 module.exports = {
   login,
   getData,
@@ -76,5 +80,6 @@ module.exports = {
   editAdministrator,
   deleteAdministrator,
   modifyPasswordController,
-  
+  getDataDashboardController,
+
 };
