@@ -16,7 +16,7 @@ export class TareasVoluntarioComponent implements OnInit {
   datosVoluntario:ResumenVoluntario | null = null;
   constructor(private voluntarioService:VoluntarioService, private tareaService:TareaService) {
     this.voluntarioService.getDatosVoluntario.subscribe({
-      next:(res)=> {this.datosVoluntario = res; console.log("Nuevos datos")}
+      next:(res)=> {this.datosVoluntario = res}
     });
    }
 

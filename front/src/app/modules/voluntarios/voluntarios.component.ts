@@ -20,7 +20,6 @@ export class VoluntariosComponent implements OnInit {
 
     this.voluntarioService.obtenerDatosVoluntario().subscribe({
       next:(res)=>{
-        console.log(res);
         this.router.navigate(['/voluntario/dashboard']);
       },
       error:()=>{

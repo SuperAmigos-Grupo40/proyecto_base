@@ -52,12 +52,10 @@ export class LoginComponent implements OnInit {
           horizontalPosition:'center',
           verticalPosition:'top'});
 
-          console.log(res);
-
           this.router.navigate([res.tipo]);
           
         },
-        error:()=>{
+        error:(err)=>{
           this.matSnackBar.open('Error al iniciar sesión','ERROR',{
             duration:3000,
           horizontalPosition:'center',
