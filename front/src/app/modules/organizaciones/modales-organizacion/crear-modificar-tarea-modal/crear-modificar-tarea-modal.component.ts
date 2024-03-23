@@ -1,12 +1,9 @@
-///<reference path="../../../../../../node_modules/@types/google-maps/index.d.ts"/>
-
-import { AfterViewInit, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {  Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, take } from 'rxjs';
 import { Categoria } from 'src/app/core/interfaces/categoria';
-import { Organizacion } from 'src/app/core/interfaces/organizacion';
 import { Tarea } from 'src/app/core/interfaces/tarea';
 import { CategoriaService } from 'src/app/core/services/categoria.service';
 import { OrganizacionService } from 'src/app/core/services/organizacion.service';
@@ -19,7 +16,7 @@ import { ResumenOrganizacion } from 'src/app/core/interfaces/resumenOrganizacion
   templateUrl: './crear-modificar-tarea-modal.component.html',
   styleUrls: ['./crear-modificar-tarea-modal.component.css']
 })
-export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit {
+export class CrearModificarTareaModalComponent implements OnInit{
 
   constructor(private categoriaService:CategoriaService, organizacionService:OrganizacionService, fb:FormBuilder, 
               private tareaService:TareaService, private matSnackBar:MatSnackBar,
@@ -46,9 +43,6 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
       this.modificar = true;
       this.duracion = this.dataTarea.duracion;
       this.puntos = this.dataTarea.points / this.dataTarea.duracion;
-      this.longitud = this.dataTarea.longitud;
-      this.latitud = this.dataTarea.latitud;
-      this.direccionFormateada = this.dataTarea.place;
     
     }
     else{
@@ -71,15 +65,6 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
   duracion:number = 0;
   puntos:number = 0;
   horariosDisponibles : number[] = [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23];
-  autocomplete: google.maps.places.Autocomplete | undefined;
-  latitud:number = 0;
-  longitud:number = 0;
-  direccionFormateada:string = '';
-
-  autocompleteOptions = {
-    types: ['geocode'], 
-    componentRestrictions: { country: 'AR' }, 
-  };
   
   ngOnInit(): void {
     
@@ -102,20 +87,6 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
     
   }
 
-  }
-  
-  ngAfterViewInit(): void {
-    
-    this.autocomplete = new google.maps.places.Autocomplete(this.inputDireccion.nativeElement,this.autocompleteOptions);
-    
-    this.autocomplete.addListener('place_changed',()=>{
-      const direccion = this.autocomplete?.getPlace();
-      this.latitud = direccion?.geometry?.location?.lat()!;
-      this.longitud = direccion?.geometry?.location?.lng()!;
-      this.direccionFormateada = direccion?.formatted_address!;
-
-      
-    });
   }
   
   cargarCategorias():void{
@@ -150,13 +121,11 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
         coordinatorId: idCoordinador!,
         points: formValue.puntos,
         date: formValue.fecha,
-        place: this.direccionFormateada,
+        place: formValue.direccion,
         categoryId: formValue.categoriaId,
         cantParticipantes:formValue.cantidadParticipantes,
         duracion:formValue.duracion,
         hora:formValue.horaInicio,
-        latitud:this.latitud,
-        longitud:this.longitud
 
       } 
       
@@ -184,13 +153,11 @@ export class CrearModificarTareaModalComponent implements OnInit, AfterViewInit 
       description: formValue.descripcion,
       points: formValue.puntos,
       date: formValue.fecha,
-      place: this.direccionFormateada,
+      place: formValue.direccion,
       categoryId: formValue.categoriaId,
       cantParticipantes: formValue.cantidadParticipantes,
       duracion:formValue.duracion,
-      hora:formValue.horaInicio,
-      latitud:this.latitud,
-      longitud:this.longitud
+      hora:formValue.horaInicio
     }
     this.tareaService.modificarTarea(this.dataTarea.id!, tareaModificada).subscribe({
       next:()=>{

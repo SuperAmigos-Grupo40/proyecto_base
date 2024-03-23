@@ -16,7 +16,6 @@ export class DashboardOrganizacionComponent implements OnInit {
   constructor(private organizacionService:OrganizacionService, private modal:MatDialog) {
     this.datosOrganizacion$ = organizacionService.getDatosOrganizacion;
     this.datosOrganizacion$.subscribe({next:(res)=>{
-      console.log(res);
     }})
   }
 

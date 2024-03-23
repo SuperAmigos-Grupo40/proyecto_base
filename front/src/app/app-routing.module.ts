@@ -17,7 +17,7 @@ const routes: Routes = [
   {
     path:'organizacion',
     loadChildren:()=>import('./modules/organizaciones/organizaciones.module').then(m=>m.OrganizacionesModule),
-    canLoad:[OrganizacionGuard]
+    //canLoad:[OrganizacionGuard]
 
   },
   {

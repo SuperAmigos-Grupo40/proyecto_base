@@ -88,7 +88,7 @@
         </mat-form-field>
     
         <div class="contenedor-botones">
-            <button *ngIf="!modificar" mat-raised-button color="primary" (click)="crearTarea()" [disabled]="form.invalid || direccionFormateada===''">CREAR</button>
+            <button *ngIf="!modificar" mat-raised-button color="primary" (click)="crearTarea()" [disabled]="form.invalid">CREAR</button>
             <button *ngIf="modificar" mat-raised-button color="primary" (click)="modificarTarea()" [disabled]="form.invalid">MODIFICAR</button>
             <button mat-raised-button color="warn" mat-dialog-close>CERRAR</button>
         </div>

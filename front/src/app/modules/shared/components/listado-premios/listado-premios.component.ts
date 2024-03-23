@@ -91,7 +91,6 @@ export class ListadoPremiosComponent implements OnInit {
     this.voluntarioService.obtenerDatosVoluntario().subscribe({
       next:(res)=>{
         this.datosVoluntario = res;
-        console.log(res);
       }
     });
   }

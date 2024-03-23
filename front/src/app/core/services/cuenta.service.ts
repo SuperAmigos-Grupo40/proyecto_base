@@ -28,7 +28,6 @@ export class CuentaService {
   login(datosLogin:DatosLogin):Observable<Credencial>{
 
     return this.apiService.post<Credencial>('/cuentas/login', datosLogin).pipe(map((res)=>{
-      console.log(res);
       this.credencialesUsuario.next(res);
 
       localStorage.setItem('credencialesUsuario',JSON.stringify(res));
